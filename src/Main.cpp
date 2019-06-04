@@ -2,14 +2,21 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <chrono>
+#include <thread>
+#include <conio.h>
+
+#define elif else if
 
 using namespace std;
 
-int n = 40, m = 80; // maze size
+int n = 250, m = 250; // maze size
 int dx[] = {0, 2, 0, -2};
 int dy[] = {2, 0, -2, 0};
 
-char matr[100][100]; // maze
+int px = 1, py = 1;
+
+char matr[1000][1000]; // maze
 
 void init(){
     for(int i = 0; i <= n; i++)
@@ -40,9 +47,17 @@ void generMaze(int x, int y){
 }
 
 void print(){
-    for(int i = 0; i <= n; i++){
-        for(int j = 0; j <= m; j++)
-            cout << matr[i][j];
+    system("cls");
+    for(int i = px - 10; i <= px + 10; i++){
+        for(int j = py - 10; j <=  py + 10; j++){
+            if(i < 0 || j < 0 || i > n || j > m)
+                cout << ' ';
+            elif(i == px && j == py)
+                cout << 'P';
+            else
+                cout << matr[i][j];
+        }
+            
         cout << '\n';
     }
 }
@@ -52,5 +67,33 @@ int main(){
     init();
     generMaze(1, 1);
     print();
+    char c;
+    while(true){
+        while(!_kbhit());
+        c = _getch();
+        switch (c){
+            case 'w':
+                if(px - 1 >= 0 && matr[px - 1][py] == ' ')
+                    px -= 1;
+                break;
+            case 's':
+                if(px + 1 <= n && matr[px + 1][py] == ' ')
+                    px += 1;
+                break;
+            case 'a':
+                if(py - 1 >= 0 && matr[px][py - 1] == ' ')
+                    py -= 1;
+                break;
+            case 'd':
+                if(py + 1 <= m && matr[px][py + 1] == ' ')
+                    py += 1;
+                break;
+            
+            default:
+                continue;
+        }
+        print();
+        this_thread::sleep_for(chrono::milliseconds(33));
+    }
     return 0;
 }

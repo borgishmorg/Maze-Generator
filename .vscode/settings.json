@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "cstdlib": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "chrono": "cpp",
+        "thread": "cpp"
     }
 }
