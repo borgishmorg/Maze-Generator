@@ -8,15 +8,49 @@
 
 #define elif else if
 
+#define CLEAR "clear"
+
 using namespace std;
 
-int n = 250, m = 250; // maze size
+int n = 70, m = 260; // maze size
 int dx[] = {0, 2, 0, -2};
 int dy[] = {2, 0, -2, 0};
 
 int px = 1, py = 1;
 
 char matr[1000][1000]; // maze
+
+void printPlayer(){
+    system(CLEAR);
+    for(int i = px - 10; i <= px + 10; i++){
+        for(int j = py - 10; j <=  py + 10; j++){
+            if(i < 0 || j < 0 || i > n || j > m)
+                cout << ' ';
+            elif(i == px && j == py)
+                cout << 'P';
+            else
+                cout << matr[i][j];
+        }
+        cout << '\n';
+    }
+}
+
+void printAll(){
+    this_thread::sleep_for(chrono::milliseconds(40));
+    system(CLEAR);
+    for(int i = 0; i <= n; i++){
+        for(int j = 0; j <=  m; j++){
+            if(i < 0 || j < 0 || i > n || j > m)
+                cout << ' ';
+            elif(i == px && j == py)
+                cout << 'P';
+            else
+                cout << matr[i][j];
+        }
+        cout << '\n';
+    }
+    cout.flush();
+}
 
 void init(){
     for(int i = 0; i <= n; i++)
@@ -42,31 +76,18 @@ void generMaze(int x, int y){
             continue;
         
         matr[(nx + x)/2][(ny + y)/2] = ' ';
+        printAll();
         generMaze(nx, ny);
     }
 }
 
-void print(){
-    system("cls");
-    for(int i = px - 10; i <= px + 10; i++){
-        for(int j = py - 10; j <=  py + 10; j++){
-            if(i < 0 || j < 0 || i > n || j > m)
-                cout << ' ';
-            elif(i == px && j == py)
-                cout << 'P';
-            else
-                cout << matr[i][j];
-        }
-            
-        cout << '\n';
-    }
-}
 
 int main(){
+    cout.tie(0);
     srand(time(NULL));
     init();
     generMaze(1, 1);
-    print();
+    /*printPlayer();
     char c;
     while(true){
         while(!_kbhit());
@@ -92,8 +113,8 @@ int main(){
             default:
                 continue;
         }
-        print();
+        printPlayer();
         this_thread::sleep_for(chrono::milliseconds(33));
-    }
+    }*/
     return 0;
 }
