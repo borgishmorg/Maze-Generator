@@ -1,18 +1,21 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 #include <vector>
+#include <queue>
 #include <chrono>
 #include <thread>
 #include <conio.h>
 
 #define elif else if
+#define sleep(a) this_thread::sleep_for(chrono::milliseconds(a))
 
 #define CLEAR "clear"
 
 using namespace std;
 
-int n = 70, m = 260; // maze size
+int n = 30, m = 30; // maze size
 int dx[] = {0, 2, 0, -2};
 int dy[] = {2, 0, -2, 0};
 
@@ -36,7 +39,7 @@ void printPlayer(){
 }
 
 void printAll(){
-    this_thread::sleep_for(chrono::milliseconds(40));
+    sleep(40);
     system(CLEAR);
     for(int i = 0; i <= n; i++){
         for(int j = 0; j <=  m; j++){
@@ -58,15 +61,93 @@ void init(){
             matr[i][j] = '#';
 }
 
-void generMaze(int x, int y){
+void generBFSMaze(int x, int y){
+    matr[x][y] = ' ';
+    queue<pair<int, int> > verteces;
+    verteces.push({x, y});
+    
+    while(!verteces.empty()){
+        int x0 = verteces.front().first;
+        int y0 = verteces.front().second;
+        verteces.pop();
+
+        vector<int> ways = {0, 1, 2, 3};
+        random_shuffle(ways.begin(), ways.end());
+
+        for(int dir : ways){
+            int nx = x0 + dx[dir];
+            int ny = y0 + dy[dir];
+
+            if(nx < 0 || ny < 0 ||
+               nx > n || ny > m ||
+               matr[nx][ny] == ' ')
+                continue;
+
+            matr[(nx + x0)/2][(ny + y0)/2] = ' ';
+            matr[nx][ny] = ' ';
+            verteces.push({nx, ny});
+        }
+    }
+}
+
+void generDFSMaze(int x, int y){
     matr[x][y] = ' ';
 
     vector<int> ways = {0, 1, 2, 3};
-    while(!ways.empty()){
-        int p = rand()%ways.size();
-        int dir = ways[p];
-        ways.erase(ways.begin() + p);
+    random_shuffle(ways.begin(), ways.end());
 
+    for(int dir : ways){
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+
+        if(nx < 0 || ny < 0 ||
+           nx > n || ny > m ||
+           matr[nx][ny] == ' ')
+            continue;
+        
+        matr[(nx + x)/2][(ny + y)/2] = ' ';
+        generDFSMaze(nx, ny);
+    }
+}
+
+void generAnimBFSMaze(int x, int y){
+    matr[x][y] = ' ';
+    queue<pair<int, int> > verteces;
+    verteces.push({x, y});
+    
+    while(!verteces.empty()){
+        int x0 = verteces.front().first;
+        int y0 = verteces.front().second;
+        verteces.pop();
+
+        vector<int> ways = {0, 1, 2, 3};
+        random_shuffle(ways.begin(), ways.end());
+
+        for(int dir : ways){
+            int nx = x0 + dx[dir];
+            int ny = y0 + dy[dir];
+
+            if(nx < 0 || ny < 0 ||
+               nx > n || ny > m ||
+               matr[nx][ny] == ' ')
+                continue;
+
+            matr[(nx + x0)/2][(ny + y0)/2] = ' ';
+            matr[nx][ny] = ' ';
+            verteces.push({nx, ny});
+            printAll();
+        }
+    }
+}
+
+
+void generAnimDFSMaze(int x, int y){
+    matr[x][y] = ' ';
+
+    vector<int> ways = {0, 1, 2, 3};
+    random_shuffle(ways.begin(), ways.end());
+
+    for(int dir : ways){
         int nx = x + dx[dir];
         int ny = y + dy[dir];
 
@@ -77,17 +158,12 @@ void generMaze(int x, int y){
         
         matr[(nx + x)/2][(ny + y)/2] = ' ';
         printAll();
-        generMaze(nx, ny);
+        generAnimDFSMaze(nx, ny);
     }
 }
 
-
-int main(){
-    cout.tie(0);
-    srand(time(NULL));
-    init();
-    generMaze(1, 1);
-    /*printPlayer();
+void game(){
+    printPlayer();
     char c;
     while(true){
         while(!_kbhit());
@@ -115,6 +191,14 @@ int main(){
         }
         printPlayer();
         this_thread::sleep_for(chrono::milliseconds(33));
-    }*/
+    }
+}
+
+int main(){
+    cout.tie(0);
+    srand(time(NULL));
+    init();
+    generAnimBFSMaze(1, 1);
+    printAll();
     return 0;
 }
