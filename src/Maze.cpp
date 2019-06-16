@@ -8,11 +8,32 @@ Maze::Maze(int n, int m, int px, int py):
             matr_[i][j] = '#';
 }
 
+void Maze::movePlayer(Direction dir){
+    switch (dir){
+        case Direction::UP:
+            if(px_ - 1 >= 0 && matr_[px_ - 1][py_] == ' ')
+                px_ -= 1;
+            break;
+        case Direction::DOWN:
+            if(px_ + 1 <= n_ && matr_[px_ + 1][py_] == ' ')
+                px_ += 1;
+            break;
+        case Direction::LEFT:
+            if(py_ - 1 >= 0 && matr_[px_][py_ - 1] == ' ')
+                py_ -= 1;
+            break;
+        case Direction::RIGHT:
+            if(py_ + 1 <= m_ && matr_[px_][py_ + 1] == ' ')
+                py_ += 1;
+            break;
+    }
+}
+
 void Maze::printPlayer() const{
     sleep(40);
     std::cout.tie(0);
     system(CLEAR);
-    
+
     for(int i = px_ - 10; i <= px_ + 10; i++){
         for(int j = py_ - 10; j <=  py_ + 10; j++){
             if(i < 0 || j < 0 || i > n_ || j > m_)

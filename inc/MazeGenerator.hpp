@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MAZE_GENERATOR__
+#define __MAZE_GENERATOR__
 
 class MazeGenerator;
 
@@ -11,7 +12,7 @@ class MazeGenerator;
 
 class MazeGenerator{
     public:
-        enum class Type{BFS, DFS};
+        enum class Type{BFS, DFS, EDGE};
 
         MazeGenerator();
 
@@ -24,6 +25,7 @@ class MazeGenerator{
     private:
         void generBFSMaze(int x, int y, Maze & maze) const;
         void generDFSMaze(int x, int y, Maze & maze) const;
+        void generEdgeMaze(int x, int y, Maze & maze) const;
 
         int n_, m_;
         int x0_, y0_;
@@ -33,3 +35,4 @@ class MazeGenerator{
         static const int dx_[];
         static const int dy_[];
 };
+#endif

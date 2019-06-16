@@ -11,14 +11,15 @@ Maze MazeGenerator::getMaze() const{
     Maze maze(n_, m_, x0_, y0_);
 
     switch(type_){
-        case Type::BFS:{
+        case Type::BFS:
             generBFSMaze(x0_, y0_, maze);
             break;
-        }
-        case Type::DFS:{
+        case Type::DFS:
             generDFSMaze(x0_, y0_, maze);
             break;
-        }
+        case Type::EDGE:
+            generEdgeMaze(x0_, y0_, maze);
+            break;
     }
     
     return std::move(maze);
@@ -77,6 +78,47 @@ void MazeGenerator::generDFSMaze(int x, int y, Maze & maze) const{
             maze.printAll();
 
         generDFSMaze(nx, ny, maze);
+    }
+}
+
+void MazeGenerator::generEdgeMaze(int x, int y, Maze & maze) const{
+    maze.matr_[x][y] = ' ';
+
+    std::vector<std::pair<int, int> > edge;
+    edge.push_back({x, y});
+    std::vector<int> ways = {0, 1, 2, 3};
+    
+    while(!edge.empty()){
+        random_shuffle(ways.begin(), ways.end());
+        random_shuffle(edge.begin(), edge.end());
+        
+        bool inEdge = false;
+
+        int x = edge.back().first;
+        int y = edge.back().second;
+
+        for(int dir : ways){
+            int nx = x + dx_[dir];
+            int ny = y + dy_[dir];
+
+            if(nx < 0 || ny < 0 ||
+               nx > maze.n_ || ny > maze.m_ ||
+               maze.matr_[nx][ny] == ' ')
+                continue;
+            
+            maze.matr_[(nx + x)/2][(ny + y)/2] = ' ';
+            maze.matr_[nx][ny] = ' ';
+
+            inEdge = true;
+            edge.push_back({nx, ny});
+    
+            if(animated_)
+                maze.printAll();
+            break;
+        }
+
+        if(!inEdge)
+            edge.pop_back();
     }
 }
 
