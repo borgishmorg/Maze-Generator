@@ -198,7 +198,7 @@ int main(){
     cout.tie(0);
     srand(time(NULL));
     init();
-    generAnimBFSMaze(1, 1);
-    printAll();
+    generBFSMaze(1, 1);
+    game();
     return 0;
 }
