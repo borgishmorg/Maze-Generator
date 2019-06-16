@@ -26,7 +26,7 @@ int main(){
 
     generator.setSize(50, 50);
     generator.setPlayerPos(25, 25);
-    generator.setType(MazeGenerator::Type::EDGE);
+    generator.setType(MazeGenerator::Type::BFS);
     generator.setAnimation(true);
 
     Maze maze = generator.getMaze();
